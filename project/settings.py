@@ -40,17 +40,58 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
-    'property',
+    # todo api registeration 
+
+    'django.contrib.sites',
+    'allauth',
+    'allauth.account',
+    'rest_auth.registration',
+#   todo apps 
+
+ 
     'blog',
+    'property',
     'about',
     'settings',
 
 
-    "taggit",
-    "django_summernote",
+    # todo  packager 
     "bootstrap4",
+    "taggit",
+    'django_summernote',
     'django_filters',
+
+    'django_forms_bootstrap',
+
+    # todo 
+    'rest_framework',
+     # todo token authentication
+    'rest_framework.authtoken',
+    'dj_rest_auth',
+    # 'dj_rest_auth.registration', 
+
+   
+    
+     
 ]
+
+SITE_ID = 1
+    
+
+# TODO FOR REST
+
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.TokenAuthentication',
+        
+    ]
+}
+
+
+
+
+
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',

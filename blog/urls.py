@@ -1,7 +1,8 @@
+from msilib.schema import Patch
 from urllib.parse import urlparse
 from django.urls import path 
-from . import views 
-
+from . import views  
+from .api_view import post_list_api , post_detail_api , post_search_api
 
 
 app_name = 'blog'
@@ -12,4 +13,8 @@ urlpatterns = [
 
     path("category/<str:slug>", views.PostByCategory.as_view(), name="post_by_category"),
     path('tags/<slug:slug>' , views.PostByTags.as_view(), name='post_by_tags'),
+
+    path('api/list/' , post_list_api, name='post_list_api'),
+    path('api/<int:id>/' , post_detail_api , name='post_detail_api'),
+    path('api/search/<str:query>/'  ,post_search_api , name='post_search_api'),
 ]

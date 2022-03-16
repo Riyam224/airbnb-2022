@@ -22,13 +22,21 @@ urlpatterns = [
     path('accounts/', include('django.contrib.auth.urls')),
     path('accounts/', include('accounts.urls' , namespace='accounts')),
 
-    
+
     path('admin/', admin.site.urls),
     path("", include('settings.urls' , namespace='home')),
     path('property/', include('property.urls' , namespace='property')),
     path('about/' , include('about.urls' , namespace='about')),
     path('blog/' , include('blog.urls' , namespace='blog')),
     path('summernote/', include('django_summernote.urls')),
+
+    # todo api 
+
+    path('api-auth/', include('rest_framework.urls')),
+
+    # todo api for user
+    path('rest-auth/', include('dj_rest_auth.urls')),
+    path('rest-auth/registration/', include('dj_rest_auth.registration.urls')),
 
 ]
 
