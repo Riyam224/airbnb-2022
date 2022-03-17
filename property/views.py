@@ -2,7 +2,7 @@ from django.shortcuts import redirect, render
 from django.views.generic import ListView , DetailView , CreateView
 from django.views.generic.edit import FormMixin
 from .models import Property , Category
-from .forms import PropertyBookForm
+from .forms import PropertyBookForm , PropertyForm ,  PropertyImageFormset 
 from django.urls import reverse
 from django.contrib import messages
 from .filters import PropertyFilter
@@ -11,7 +11,7 @@ from django_filters.views import FilterView
 
 class PropertyList(FilterView):
     model = Property
-    paginate_by = 1
+    paginate_by = 2
     filterset_class = PropertyFilter
     template_name = 'property/property_list.html'
 
@@ -44,16 +44,35 @@ class PropertyDetail(FormMixin, DetailView):
 
 class NewProperty(CreateView):
     model = Property
-    fields = ['title', 'description' , 'price' , 'place', 'image', 'category']
+    form_class = PropertyForm
+
+
+    def get(self, request , *args, **kwargs):
+        self.object = None
+        form_class = self.get_form_class()
+        form = self.get_form(form_class)
+        image_formset = PropertyImageFormset()
+        return self.render_to_response(self.get_context_data(
+            form = form ,
+            imageformset = image_formset
+        ))
+
+        
 
     def post(self, request , *args, **kwargs):
         form = self.get_form()
-        if form.is_valid():
+        image_formsets = PropertyImageFormset(self.request.POST , self.request.FILES)
+        if form.is_valid() and image_formsets.is_valid():
             myform = form.save(commit=False)
             myform.owner = request.user
             myform.save()
+            
+            property = Property.objects.get(id=myform.id)
+            for form in image_formsets :
+                myform2 = form.save(commit=False)
+                myform2.property = property
+                myform2.save()
             messages.success(request , 'successfully added new property')
-    
             return redirect(reverse('property:property_list'))
 
    
