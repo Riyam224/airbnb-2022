@@ -1,10 +1,7 @@
-import imp
 from django.shortcuts import redirect, render
-
-
-from django.views.generic import ListView , DetailView
+from django.views.generic import ListView , DetailView , CreateView
 from django.views.generic.edit import FormMixin
-from .models import Property
+from .models import Property , Category
 from .forms import PropertyBookForm
 from django.urls import reverse
 from django.contrib import messages
@@ -45,8 +42,23 @@ class PropertyDetail(FormMixin, DetailView):
             print('not valid')
 
 
-    
+class NewProperty(CreateView):
+    model = Property
+    fields = ['title', 'description' , 'price' , 'place', 'image', 'category']
 
+    def post(self, request , *args, **kwargs):
+        form = self.get_form()
+        if form.is_valid():
+            myform = form.save(commit=False)
+            myform.owner = request.user
+            myform.save()
+            messages.success(request , 'successfully added new property')
+    
+            return redirect(reverse('property:property_list'))
 
    
     
+def property_by_category(request,category):
+    my_category = Category.objects.get(name=category)
+    property_category= Property.objects.filter(category=my_category)
+    return render(request , 'property/property_by_category.html' , {'property_category':property_category, 'my_category':my_category})
