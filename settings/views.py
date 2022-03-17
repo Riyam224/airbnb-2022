@@ -1,15 +1,15 @@
 
 from django.shortcuts import render , get_object_or_404
-
 # Create your views here.
-
-
+from .models import NewsLetter
 from property.models import Property , Place , Category
 from django.db.models.query_utils import Q
 from django.db.models import Count
 from blog.models import Post
 from django.contrib.auth.models import User
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
+
+from settings.models import NewsLetter
 
 def home(request):
     places = Place.objects.all().annotate(property_count=Count('property_place'))
@@ -77,3 +77,11 @@ def category_filter(request , category):
 
 def contact_us(request):
     return HttpResponse('contact us ')
+
+
+def news_letter_subscribe(request):
+    email = request.POST.get('emailInput')
+    NewsLetter.objects.create(email=email)
+    return JsonResponse({
+        'done': 'done'
+    })

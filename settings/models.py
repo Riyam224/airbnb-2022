@@ -1,7 +1,9 @@
+from sys import modules
 from xml.parsers.expat import model
 from django.db import models
 from django.forms import ImageField
 from django.utils.translation import gettext as _
+from pytz import timezone
 
 # Create your models here.
 
@@ -26,5 +28,20 @@ class Settings(models.Model):
 
     def __str__(self):
         return self.site_name
+
+
+class NewsLetter(models.Model):
+
+    email = models.EmailField(_("email"), max_length=254)
+    created_at = models.DateTimeField(_("created at"),  auto_now_add=True)
+    
+    class Meta:
+        verbose_name = 'NewsLetter'
+        verbose_name_plural = 'NewsLetters'
+
+    def __str__(self):
+        """Unicode representation of NewsLetter."""
+        return str(self.email)
+
 
  
