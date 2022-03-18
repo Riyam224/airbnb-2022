@@ -1,5 +1,4 @@
-from msilib.schema import Patch
-from urllib.parse import urlparse
+
 from django.urls import path 
 from . import views  
 from .api_view import post_list_api , post_detail_api , post_search_api

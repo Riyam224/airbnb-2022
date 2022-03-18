@@ -14,7 +14,6 @@ from settings.models import NewsLetter
 def home(request):
     places = Place.objects.all().annotate(property_count=Count('property_place'))
     category = Category.objects.all()
-
     restaurant_list = Property.objects.filter(category__name='restaurants')[:4]
     hotels_list =  Property.objects.filter(category__name='hotels')[:4]
     places_list =  Property.objects.filter(category__name='places')[:4]
@@ -85,3 +84,20 @@ def news_letter_subscribe(request):
     return JsonResponse({
         'done': 'done'
     })
+
+
+
+def dashboard(request):
+     # todo fun facts 
+
+    users_count = User.objects.all().count()
+    places_count = Property.objects.filter(category__name='places').count()
+    restaurant_count = Property.objects.filter(category__name='restaurants').count()
+    hotels_count = Property.objects.filter(category__name='hotels').count()
+    context = {
+        'users_count':users_count,
+        'places_count':places_count,
+        'restaurant_count':restaurant_count,
+        'hotels_count':hotels_count
+    }
+    return render(request , 'settings/dashboard.html' , context)
