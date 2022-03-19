@@ -1,7 +1,7 @@
 
-from django.shortcuts import render , get_object_or_404
+from django.shortcuts import redirect, render , get_object_or_404
 # Create your views here.
-from .models import NewsLetter
+from .models import NewsLetter, Settings
 from property.models import Property , Place , Category
 from django.db.models.query_utils import Q
 from django.db.models import Count
@@ -10,6 +10,7 @@ from django.contrib.auth.models import User
 from django.http import HttpResponse, JsonResponse
 
 from settings.models import NewsLetter
+from .tasks import send_mail_task
 
 def home(request):
     places = Place.objects.all().annotate(property_count=Count('property_place'))
@@ -75,7 +76,27 @@ def category_filter(request , category):
 
 
 def contact_us(request):
-    return HttpResponse('contact us ')
+   
+    site_info = Settings.objects.all()
+
+    if request.method == 'POST':
+        subject = request.POST['subject']
+        name = request.POST['name']
+        email = request.POST['email']
+        message = request.POST['message']
+
+
+        send_mail_task.delay(subject , name,email,message)
+
+
+    return render(request,'settings/contact.html',{'site_info': site_info})
+
+
+
+
+
+
+
 
 
 def news_letter_subscribe(request):
