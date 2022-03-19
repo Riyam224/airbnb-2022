@@ -86,12 +86,13 @@ def contact_us(request):
         message = request.POST['message']
 
 
-        send_mail_task(subject ,name,email,message)
-    
+        send_mail_task.delay(subject , name,email,message)
+
+
+    return render(request,'settings/contact.html',{'site_info': site_info})
 
 
 
-    return render(request , 'settings/contact.html' , {'site_info' : site_info})
 
 
 
